@@ -4,7 +4,7 @@ import {
 	CRX_BACKGROUND_OUTDIR,
 	CRX_CONTENT_OUTDIR,
 	CRX_OUTDIR
-} from "./globalConfig"
+} from "./globalConfig.js"
 
 // 拷贝目标文件
 const copyDirectory = (srcDir, destDir) => {

@@ -1,7 +1,9 @@
-import Home from "@/popup/pages/home"
+import { RouterProvider } from "react-router-dom"
+import { globalRouters } from "@/popup/router"
+import "./style.scss"
 
 function Popup() {
-	return <Home />
+	return <RouterProvider router={globalRouters} />
 }
 
 export default Popup
