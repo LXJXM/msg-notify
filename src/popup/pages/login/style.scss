@@ -3,16 +3,23 @@
 	top: 0;
 	bottom: 0;
 	width: 100%;
-	background: #7adbcb;
+	height: 280px;
+	// background: #db7ab3;
+	text-align: center;
+	padding: 0 20px;
 
-	.logo {
-		display: block;
-		margin: 50px auto 20px;
+	&__tips {
+		color: rgb(157, 156, 156);
+		margin-bottom: 20px;
+		p {
+			line-height: 24px;
+		}
 	}
 
-	.ipt-con {
-		margin: 0 auto 20px;
-		width: 300px;
-		text-align: center;
+	&__logo {
+		display: block;
+		width: 45px;
+		height: 45px;
+		margin: 50px auto 20px;
 	}
 }

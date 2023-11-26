@@ -1,60 +1,19 @@
-import { useNavigate } from "react-router-dom"
 import { Button, Input } from "antd"
 import { useState } from "react"
-import imgLogo from "./logo.png"
+import imgLogo from "@/popup/images/logo.png"
 import "./style.scss"
-import { apiReqs } from "../../../api"
 
 function Login() {
-	const navigate = useNavigate()
-
-	const [account, setAccount] = useState("")
-	const [password, setPassword] = useState("")
-
-	const onLogin = () => {
-		apiReqs.signIn({
-			// 如果上传文件，则设置formData为true, 这里暂时不用
-			// formData:true
-			data: {
-				account,
-				password
-			},
-			success: res => {
-				console.log(res)
-				navigate("/home")
-			},
-			fail: res => {
-				alert(res)
-			}
-		})
-	}
-
 	return (
 		<div className="P-login">
-			<img src={imgLogo} alt="" className="logo" />
-			<div className="ipt-con">
-				<Input
-					placeholder="账号"
-					value={account}
-					onChange={e => {
-						setAccount(e.target.value)
-					}}
-				/>
+			<img className="P-login__logo" src={imgLogo} />
+			<div className="P-login__tips">
+				<p>未登录</p>
+				<p>登录后才能使用，鲁大师管理后台消息提醒插件</p>
 			</div>
-			<div className="ipt-con">
-				<Input.Password
-					placeholder="密码"
-					value={password}
-					onChange={e => {
-						setPassword(e.target.value)
-					}}
-				/>
-			</div>
-			<div className="ipt-con">
-				<Button type="primary" block={true} onClick={onLogin}>
-					登录
-				</Button>
-			</div>
+			<Button type="primary" block>
+				立即登录
+			</Button>
 		</div>
 	)
 }

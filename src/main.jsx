@@ -12,7 +12,17 @@ import "@/common/styles/frame.scss"
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
-		<ConfigProvider locale={zhCN}>
+		<ConfigProvider
+			locale={zhCN}
+			theme={{
+				token: {
+					// Seed Token，影响范围大
+					colorPrimary: "#7ab472",
+					// 派生变量，影响范围小
+					colorBgContainer: "#f6ffed"
+				}
+			}}
+		>
 			<Popup />
 		</ConfigProvider>
 	</React.StrictMode>
