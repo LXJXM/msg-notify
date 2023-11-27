@@ -65,6 +65,7 @@ function apiFetch(config) {
  * config.fail(err): 请求失败回调
  * config.done(): 请求结束回调
  */
+
 export function apiRequest(config) {
 	console.log("config: ", config)
 	// 如果没有设置config.data，则默认为{}
