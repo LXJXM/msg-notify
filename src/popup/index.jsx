@@ -11,22 +11,15 @@ function Popup() {
 	const [username, setUsername] = useState("")
 	useEffect(() => {
 		chrome.runtime.sendMessage({ type: "initPopup" }, function (message) {
-			const userInfo = message.userInfo
-			console.log("popup: ", userInfo)
-			// 创建URLSearchParams对象，并传入参数字符串
-			const urlParams = new URLSearchParams(userInfo)
-
-			// 获取name参数的值
-			const nameValue = urlParams.get("name")
-
-			// 解码name值为中文
-			const decodedName = decodeURIComponent(nameValue)
-			if (decodedName) {
-				setUsername(decodedName)
-				console.log(decodedName) // 输出：李嘉明
+			console.log("popup msg: ", message)
+			if (message.userInfo) {
+				// 创建URLSearchParams对象，并传入参数字符串
+				const urlParams = new URLSearchParams(message.userInfo)
+				// 获取name参数的值
+				const nameValue = urlParams.get("username")
+				setUsername(nameValue)
 			}
-			// todo 进一步调整功能，实现点击和那个消息通知一样的登录效果
-
+			
 			// if (userInfo && userInfo.access_token) {
 			// 	$(".notice-main").css("display", "block")
 			// 	$(".not-logged").css("display", "none")
@@ -67,7 +60,7 @@ function Popup() {
 
 	return (
 		<div className="P-container">
-			<MsgList username={username} list={msgList} />
+			{username ? <MsgList username={username} list={msgList} /> : <Login />}
 		</div>
 	)
 }

@@ -1,7 +1,7 @@
 /*global chrome*/
 import { apiRequest, apiReqs } from "@/api"
-
-let userInfo = {}
+import { MAIN_URL } from "@/common/config/index.js"
+let userInfo = null
 // manifest.json的Permissions配置需添加declarativeContent权限
 chrome.runtime.onInstalled.addListener(function () {
 	// 默认先禁止Page Action。如果不加这一句，则无法生效下面的规则
@@ -90,6 +90,9 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
 		response({ userInfo })
 		return true
 	}
+
+
+	//  todo 还不确定要不要用
 	if (message.type == "updateBadgeText") {
 		if (message.text > 0) {
 			chrome.action.setBadgeText({ text: message.text.toString() })
@@ -100,11 +103,22 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
 	}
 })
 
-// 监听Chrome中标签页的更新事件
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 	if (changeInfo.status === "complete" && tab.active) {
 		// 当页面加载完成且当前标签页处于活动状态时
-		console.log("test-test")
+		console.log("tab updataed!")
+		console.log("main url: ", MAIN_URL)
+		chrome.cookies.get({ url: MAIN_URL, name: "LUP" }, res => {
+			console.log("background res:", res)
+			if (res && res.value) {
+				userInfo = decodeURIComponent(res.value)
+			} else {
+				userInfo = null
+			}
+			console.log("backround userInfo:", userInfo)
+		})
+
+		// 打开任意页面时检测 admin.ludashi.com 域名下面的用户cookie是否存在即可
 
 		// 如果未收到响应或响应中不包含会话数据
 		// const url = new URL(tab.url)
@@ -135,47 +149,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 		// }
 
 		// 能从cookie中解出name说明已经登录
-
-		chrome.cookies.get(
-			{ url: "https://admin-aliyun-test.ludashi.com/", name: "LUP" },
-			res => {
-				userInfo = decodeURIComponent(res.value)
-				console.log("userInfo:", userInfo)
-			}
-		)
-
-		// if (url.hostname == "baominggongju.com") {
-		// 	// 如果当前域名为'baominggongju.com'
-
-		// 	// 重置userInfo对象
-		// 	userInfo = {}
-
-		// 	// 清除徽章文本
-		// 	chrome.action.setBadgeText({ text: "" })
-
-		// 	// 清空本地存储
-		// 	chrome.storage.local.clear()
-
-		// 	console.log("清除userInfo", userInfo)
-		// } else {
-		// 	// 如果当前域名不是'baominggongju.com'
-
-		// 	// 从本地存储中获取userInfo值
-		// 	chrome.storage.local.get("userInfo", function (result) {
-		// 		let value = result["userInfo"]
-		// 		console.log("从缓存中拿去数据", value)
-
-		// 		if (value && isJSON(value)) {
-		// 			// 如果从本地存储中获取到有效的JSON值
-
-		// 			// 解析JSON格式的userInfo对象
-		// 			userInfo = JSON.parse(value)
-
-		// 			// 调用initWebSock函数
-		// 			initWebSock()
-		// 		}
-		// 	})
-		// }
 	}
 })
 
