@@ -1,6 +1,4 @@
 /*global chrome*/
-// import { RouterProvider } from "react-router-dom"
-// import { globalRouters } from "@/popup/router"
 import "./style.scss"
 import { useEffect, useState } from "react"
 import MsgList from "@/popup/pages/msg-list"
@@ -8,6 +6,7 @@ import Login from "@/popup/pages/login"
 function Popup() {
 	const [username, setUsername] = useState("")
 	useEffect(() => {
+		// todo build 时放开
 		chrome.runtime.sendMessage({ type: "initPopup" }, function (message) {
 			console.log("popup msg: ", message)
 			if (message.userInfo) {

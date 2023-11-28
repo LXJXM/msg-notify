@@ -1,8 +1,7 @@
-import { Button, Input } from "antd"
-import { useState } from "react"
+import { Button } from "antd"
 import imgLogo from "@/popup/images/logo.png"
 import "./style.scss"
-import { MAIN_URL } from "../../../common/config"
+import { MAIN_URL } from "@/api"
 
 function Login() {
 	return (
@@ -12,7 +11,7 @@ function Login() {
 				<p>未登录</p>
 				<p>登录后才能使用，鲁大师管理后台消息提醒插件</p>
 			</div>
-			<Button type="primary" block onClick={()=>window.open(MAIN_URL)}>
+			<Button type="primary" block onClick={() => window.open(MAIN_URL)}>
 				立即登录
 			</Button>
 		</div>

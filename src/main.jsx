@@ -1,8 +1,6 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import Popup from "@/popup"
-// todo 在popup页面调试content script，仅用于开发环境，build前记得要注释掉。
-// import '@/content'
 
 import { ConfigProvider } from "antd"
 // 引入Ant Design中文语言包

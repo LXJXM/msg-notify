@@ -1,9 +1,10 @@
 // 引入mock.js，不使用时注释掉，build前要注释掉
 // import '@/mock'
 /*global chrome*/
-
+// 目标地址
+export const MAIN_URL = "http://admin-aliyun-test.ludashi.com/"
 // 请求服务器地址（开发环境模拟请求地址）
-let API_DOMAIN = "http://cloud-beta-wan.ludashi.com/console"
+let API_DOMAIN = "http://admin-aliyun-test.ludashi.com/pcgameconsole/ConsoleUserMessages"
 // 请求服务器地址（正式build环境真实请求地址）
 // if (import.meta.env.MODE === 'production') {
 //     API_DOMAIN = 'http://localhost/api/'
@@ -101,78 +102,78 @@ export function apiRequest(config) {
 	}
 
 	// todo mock
-	if (config.url.indexOf("/MessageLists") > -1) {
-		config.success({
-			errno: 0,
-			msg: "succ",
-			data: {
-				lists: [
-					{
-						title: "计划A费用超标 11111",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 2",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 3",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 4",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 1",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 2",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 3",
-						id: 1
-					},
-					{
-						title: "计划A费用超标 4",
-						id: 1
-					}
-				],
-				limit: 10,
-				currentPage: 1,
-				totalPage: 1
-			}
-		})
-	}
+	// if (config.url.indexOf("/MessageLists") > -1) {
+	// 	config.success({
+	// 		errno: 0,
+	// 		msg: "succ",
+	// 		data: {
+	// 			lists: [
+	// 				{
+	// 					title: "计划A费用超标 11111",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 2",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 3",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 4",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 1",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 2",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 3",
+	// 					id: 1
+	// 				},
+	// 				{
+	// 					title: "计划A费用超标 4",
+	// 					id: 1
+	// 				}
+	// 			],
+	// 			limit: 10,
+	// 			currentPage: 1,
+	// 			totalPage: 1
+	// 		}
+	// 	})
+	// }
 
 	// todo mock
-	if (config.url.indexOf("/MessageTotal") > -1) {
-		config.success({
-			errno: 0,
-			msg: "succ",
-			data: {
-				total: 20
-			}
-		})
-	}
+	// if (config.url.indexOf("/MessageTotal") > -1) {
+	// 	config.success({
+	// 		errno: 0,
+	// 		msg: "succ",
+	// 		data: {
+	// 			total: 20
+	// 		}
+	// 	})
+	// }
 
 	// 发起请求
-	// fetch(config.url, axiosConfig)
-	// 	.then(res => res.json())
-	// 	.then(result => {
-	// 		// 请求结束的回调
-	// 		config.done && config.done()
-	// 		// 请求成功的回调
-	// 		config.success && config.success(result)
-	// 	})
-	// 	.catch(() => {
-	// 		// 请求结束的回调
-	// 		config.done && config.done()
-	// 		// 请求失败的回调
-	// 		config.fail && config.fail(API_FAILED)
-	// 	})
+	fetch(config.url, axiosConfig)
+		.then(res => res.json())
+		.then(result => {
+			// 请求结束的回调
+			config.done && config.done()
+			// 请求成功的回调
+			config.success && config.success(result)
+		})
+		.catch(() => {
+			// 请求结束的回调
+			config.done && config.done()
+			// 请求失败的回调
+			config.fail && config.fail(API_FAILED)
+		})
 }
 
 // 委托background执行请求

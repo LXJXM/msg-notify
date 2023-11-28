@@ -1,10 +1,6 @@
 import fs from "fs"
 import path from "path"
-import {
-	CRX_BACKGROUND_OUTDIR,
-	CRX_CONTENT_OUTDIR,
-	CRX_OUTDIR
-} from "./globalConfig.js"
+import { CRX_BACKGROUND_OUTDIR, CRX_OUTDIR } from "./globalConfig.js"
 
 // 拷贝目标文件
 const copyDirectory = (srcDir, destDir) => {
@@ -45,16 +41,12 @@ const deleteDirectory = dir => {
 	}
 }
 
-// 源目录: content script 临时生成的目录
-const contentOutDir = path.resolve(process.cwd(), CRX_CONTENT_OUTDIR)
 // 源目录: background script 临时生成的目录
 const backgroundOutDir = path.resolve(process.cwd(), CRX_BACKGROUND_OUTDIR)
 // 目标目录：Chrome EXtension 最终build目录
 const outDir = path.resolve(process.cwd(), CRX_OUTDIR)
 
 // 将复制源目录内的文件和目录全部复制到目标目录中
-copyDirectory(contentOutDir, outDir)
 copyDirectory(backgroundOutDir, outDir)
 // 删除源目录
-deleteDirectory(contentOutDir)
 deleteDirectory(backgroundOutDir)

@@ -1,9 +1,10 @@
 /*global chrome*/
 import { apiRequest, apiReqs } from "@/api"
-import { MAIN_URL } from "@/common/config/index.js"
+import { MAIN_URL } from "@/api"
 let userInfo = null
 // manifest.json的Permissions配置需添加declarativeContent权限
 chrome.runtime.onInstalled.addListener(function () {
+	console.log("插件 安装！")
 	// 默认先禁止Page Action。如果不加这一句，则无法生效下面的规则
 	// chrome.action.disable()
 	// chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
@@ -53,10 +54,14 @@ chrome.runtime.onInstalled.addListener(function () {
 	// 		}
 	// 	})
 	// }, 5000)
-
-	console.log(111)
-	console.log(222)
 })
+
+chrome.runtime.onStartup.addListener(function() {
+	console.log("插件 启动！");
+  });
+
+
+
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
 	// 接收来自popup script的消息，requset里不允许传递function和file类型的参数
@@ -103,6 +108,9 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
 	}
 })
 
+
+
+// 检测登录状态
 chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 	if (changeInfo.status === "complete" && tab.active) {
 		// 当页面加载完成且当前标签页处于活动状态时
@@ -117,39 +125,5 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
 			}
 			console.log("backround userInfo:", userInfo)
 		})
-
-		// 打开任意页面时检测 admin.ludashi.com 域名下面的用户cookie是否存在即可
-
-		// 如果未收到响应或响应中不包含会话数据
-		// const url = new URL(tab.url)
-		// console.log(url.hostname)
-
-		// let getActive = chrome.tabs.query({
-		// 	active: true,
-		// 	currentWindow: true
-		// })
-
-		// let getting = chrome.cookies.get({
-		// 	url: tabs[0].url,
-		// 	name: "LUP"
-		// })
-
-		// {
-		// 	"domain": "admin-aliyun-test.ludashi.com",
-		// 	"expirationDate": 1701164709.982491,
-		// 	"hostOnly": true,
-		// 	"httpOnly": false,
-		// 	"name": "LUP",
-		// 	"path": "/",
-		// 	"sameSite": "unspecified",
-		// 	"secure": false,
-		// 	"session": false,
-		// 	"storeId": "0",
-		// 	"value": "id%3D209%26username%3Dlijiaming%26email%3Dlijiaming%2540ludashi.com%26name%3D%25E6%259D%258E%25E5%2598%2589%25E6%2598%258E%26enabled%3D1%26createtime%3D2022-03-11%2B11%253A19%253A44%26auth_type%3D0"
-		// }
-
-		// 能从cookie中解出name说明已经登录
 	}
 })
-
-// console.log("background:", chrome.cookies)

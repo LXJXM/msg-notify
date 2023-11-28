@@ -2,35 +2,37 @@ import "./style.scss"
 import Logo from "@/popup/images/logo.png"
 import { Avatar, Collapse, List, Badge, Empty } from "antd"
 import { useEffect, useState } from "react"
+import { apiReqs } from "@/api"
 
 function MsgList(props) {
-	const [unreadMsgNum, setUnreadMsgNum] = useState(props.list.length)
-	// apiReqs.getMsgList({
-	// 	data: {
-	// 		user_name: "zhanghengpu",
-	// 		page: 1,
-	// 		limit: 20
-	// 	},
-	// 	success: res => {
-	// 		console.log("列表数据获取成功", res)
-	// 		console.log(res.data.lists)
-	// 		setMsgList(res.data.lists || [])
-	// 	},
-	// 	fail: error => {
-	// 		console.log("列表数据获取失败", error)
-	// 	}
-	// })
-	// https://admin-aliyun-test.ludashi.com/
+	const [list, setList] = useState([])
+	const [unreadNum, setUnreadNum] = useState(list.length)
+	// todo 1.消息需要做分页处理
+	// todo 2.点击消息后发送标记已阅读
 	useEffect(() => {
-		setUnreadMsgNum(props.list.length)
-	}, [props.list])
+		apiReqs.getMsgList({
+			data: {
+				user_name: props.username,
+				page: 1,
+				limit: 20
+			},
+			success: res => {
+				console.log("列表数据获取成功", res)
+				console.log(res.data.lists)
+				setList(res.data.lists || [])
+				setUnreadNum(res.data.lists.length || 0)
+			},
+			fail: error => {
+				console.log("列表数据获取失败", error)
+			}
+		})
+	}, [])
 
 	const handleMsgClick = () => {
-		if (unreadMsgNum <= 0) {
+		if (unreadNum <= 0) {
 			return
 		}
-
-		setUnreadMsgNum(unreadMsgNum - 1)
+		setUnreadNum(unreadNum - 1)
 	}
 
 	return (
@@ -39,14 +41,14 @@ function MsgList(props) {
 				<Avatar size="large" src={Logo} />
 				<div className="P-list__username">lijiaming</div>
 				<div className="P-list__tips">
-					您有 <div className="P-list__num">{unreadMsgNum}</div> 条未读消息
+					您有 <div className="P-list__num">{unreadNum}</div> 条未读消息
 				</div>
 			</div>
 			<div className="P-list__container">
-				{props.list.length !== 0 ? (
+				{list.length !== 0 ? (
 					<List
 						grid={{ column: 1 }}
-						dataSource={props.list}
+						dataSource={list}
 						renderItem={item => (
 							<MsgListItem title={item.title} onClick={handleMsgClick} />
 						)}
