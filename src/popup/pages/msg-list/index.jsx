@@ -5,7 +5,22 @@ import { useEffect, useState } from "react"
 
 function MsgList(props) {
 	const [unreadMsgNum, setUnreadMsgNum] = useState(props.list.length)
-	
+	// apiReqs.getMsgList({
+	// 	data: {
+	// 		user_name: "zhanghengpu",
+	// 		page: 1,
+	// 		limit: 20
+	// 	},
+	// 	success: res => {
+	// 		console.log("列表数据获取成功", res)
+	// 		console.log(res.data.lists)
+	// 		setMsgList(res.data.lists || [])
+	// 	},
+	// 	fail: error => {
+	// 		console.log("列表数据获取失败", error)
+	// 	}
+	// })
+	// https://admin-aliyun-test.ludashi.com/
 	useEffect(() => {
 		setUnreadMsgNum(props.list.length)
 	}, [props.list])
@@ -27,7 +42,19 @@ function MsgList(props) {
 					您有 <div className="P-list__num">{unreadMsgNum}</div> 条未读消息
 				</div>
 			</div>
-			<div className="P-list__container">{props.list.length !== 0 ? <List grid={{ column: 1 }} dataSource={props.list} renderItem={item => <MsgListItem title={item.title} onClick={handleMsgClick} />} /> : <Empty className="P-list__empty" />}</div>
+			<div className="P-list__container">
+				{props.list.length !== 0 ? (
+					<List
+						grid={{ column: 1 }}
+						dataSource={props.list}
+						renderItem={item => (
+							<MsgListItem title={item.title} onClick={handleMsgClick} />
+						)}
+					/>
+				) : (
+					<Empty className="P-list__empty" />
+				)}
+			</div>
 		</div>
 	)
 }
@@ -43,7 +70,12 @@ function MsgListItem(props) {
 	return (
 		<List.Item onClick={handleClick}>
 			<Badge dot={!checkState}>
-				<Collapse className="P-list__item" items={[{ label: props.title, children: <p>计划A费用超标，点击前往查看</p> }]} />
+				<Collapse
+					className="P-list__item"
+					items={[
+						{ label: props.title, children: <p>计划A费用超标，点击前往查看</p> }
+					]}
+				/>
 			</Badge>
 		</List.Item>
 	)
