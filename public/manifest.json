@@ -1,37 +1,43 @@
 {
-    "name": "lds-admin-msg-center",
-    "version": "1.0",
-    "description": "鲁大师admin消息通知中心",
-    "manifest_version": 3,
-    "background": {
-      "service_worker": "background.js"
-    },
-    "permissions": ["storage","declarativeContent","cookies"],
-    "host_permissions":["*://*.ludashi.com/"],
-    "web_accessible_resources": [
-      {
-        "resources": [ "/images/app.png" ],
-        "matches": ["<all_urls>"]
-      },
-      {
-        "resources": [ "insert.js" ],
-        "matches": ["<all_urls>"]
-      }
-    ],
-    "action": {
-      "default_popup": "index.html",
-      "default_icon": {
-        "16": "/images/app.png",
-        "32": "/images/app.png",
-        "48": "/images/app.png",
-        "128": "/images/app.png"
-      },
-      "default_title": "鲁大师Admin消息中心"
-    },
-    "icons": {
-      "16": "/images/app.png",
-      "32": "/images/app.png",
-      "48": "/images/app.png",
-      "128": "/images/app.png"
-    }
-  }
+	"name": "LDS Admin Message Center",
+	"version": "1.0",
+	"description": "鲁大师admin消息通知中心",
+	"manifest_version": 3,
+	"background": {
+		"service_worker": "background.js"
+	},
+	"permissions": [
+		"storage",
+		"declarativeContent",
+		"cookies",
+		"alarms",
+		"notifications"
+	],
+	"host_permissions": ["*://*.ludashi.com/"],
+	"web_accessible_resources": [
+		{
+			"resources": ["/images/app.png"],
+			"matches": ["<all_urls>"]
+		},
+		{
+			"resources": ["insert.js"],
+			"matches": ["<all_urls>"]
+		}
+	],
+	"action": {
+		"default_popup": "index.html",
+		"default_icon": {
+			"16": "/images/app.png",
+			"32": "/images/app.png",
+			"48": "/images/app.png",
+			"128": "/images/app.png"
+		},
+		"default_title": "鲁大师Admin消息中心"
+	},
+	"icons": {
+		"16": "/images/app.png",
+		"32": "/images/app.png",
+		"48": "/images/app.png",
+		"128": "/images/app.png"
+	}
+}

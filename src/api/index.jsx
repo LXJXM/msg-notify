@@ -1,10 +1,8 @@
-// 引入mock.js，不使用时注释掉，build前要注释掉
-// import '@/mock'
-/*global chrome*/
 // 目标地址
-export const MAIN_URL = "http://admin-aliyun-test.ludashi.com/"
+export const MAIN_URL = "http://admin-aliyun-test.ludashi.com"
 // 请求服务器地址（开发环境模拟请求地址）
-let API_DOMAIN = "http://admin-aliyun-test.ludashi.com/pcgameconsole/ConsoleUserMessages"
+let API_DOMAIN =
+	"http://admin-aliyun-test.ludashi.com/pcgameconsole/ConsoleUserMessages"
 // 请求服务器地址（正式build环境真实请求地址）
 // if (import.meta.env.MODE === 'production') {
 //     API_DOMAIN = 'http://localhost/api/'
@@ -29,29 +27,17 @@ export const apiReqs = {
 	// 获取未读消息总数
 	getUnreadMsgNum: config => {
 		config.url = API_DOMAIN + "/MessageTotal"
-		config.method = "get"
-		apiFetch(config)
+
+		apiRequest(config)
 	},
 	// 获取消息列表
 	getMsgList: config => {
 		config.url = API_DOMAIN + "/MessageLists"
-		apiFetch(config)
+		apiRequest(config)
 	},
 	// 标记消息已读
 	markMsgRead: config => {
 		config.url = API_DOMAIN + "/MessageRead"
-		config.method = "get"
-		apiFetch(config)
-	}
-}
-
-// 发起请求
-function apiFetch(config) {
-	if (config.background && import.meta.env.MODE === "production") {
-		// [适用于build环境的content script]委托background script发起请求，此种方式只能传递普通json数据，不能传递函数及file类型数据。
-		sendRequestToBackground(config)
-	} else {
-		// [适用于popup及开发环境的content script]发起请求
 		apiRequest(config)
 	}
 }
@@ -61,10 +47,10 @@ function apiFetch(config) {
  * config.method: [必须]请求method
  * config.url: [必须]请求url
  * config.data: 请求数据
- * config.formData: 是否以formData格式提交（用于上传文件）
  * config.success(res): 请求成功回调
  * config.fail(err): 请求失败回调
  * config.done(): 请求结束回调
+ * config.cookies: [必传]携带的用户凭证
  */
 
 export function apiRequest(config) {
@@ -75,92 +61,25 @@ export function apiRequest(config) {
 	}
 
 	// 如果没有设置config.method，则默认为post
-	config.method = config.method || "post"
+	config.method = config.method || "get"
 
 	// 请求头设置
 	let headers = {}
-	let data = null
+	let url = config.url
+	// 如果不长传文件，fetch()默认的Content-Type为text/plain;charset=UTF-8，需要手动进行修改。
+	headers["Content-Type"] = "application/json;charset=UTF-8"
+	headers["Cookie"] = config.cookies
 
-	if (config.formData) {
-		// 上传文件的兼容处理，如果config.formData=true，则以form-data方式发起请求。
-		// fetch()会自动设置Content-Type为multipart/form-data，无需额外设置。
-		data = new FormData()
-		Object.keys(config.data).forEach(function (key) {
-			data.append(key, config.data[key])
-		})
-	} else {
-		// 如果不长传文件，fetch()默认的Content-Type为text/plain;charset=UTF-8，需要手动进行修改。
-		headers["Content-Type"] = "application/json;charset=UTF-8"
-		data = JSON.stringify(config.data)
-	}
+	url += "?" + objectToQueryString(config.data)
 
 	// 准备好请求的全部数据
 	let axiosConfig = {
 		method: config.method,
-		headers,
-		body: data
+		headers
 	}
 
-	// todo mock
-	// if (config.url.indexOf("/MessageLists") > -1) {
-	// 	config.success({
-	// 		errno: 0,
-	// 		msg: "succ",
-	// 		data: {
-	// 			lists: [
-	// 				{
-	// 					title: "计划A费用超标 11111",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 2",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 3",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 4",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 1",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 2",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 3",
-	// 					id: 1
-	// 				},
-	// 				{
-	// 					title: "计划A费用超标 4",
-	// 					id: 1
-	// 				}
-	// 			],
-	// 			limit: 10,
-	// 			currentPage: 1,
-	// 			totalPage: 1
-	// 		}
-	// 	})
-	// }
-
-	// todo mock
-	// if (config.url.indexOf("/MessageTotal") > -1) {
-	// 	config.success({
-	// 		errno: 0,
-	// 		msg: "succ",
-	// 		data: {
-	// 			total: 20
-	// 		}
-	// 	})
-	// }
-
 	// 发起请求
-	fetch(config.url, axiosConfig)
+	fetch(url, axiosConfig)
 		.then(res => res.json())
 		.then(result => {
 			// 请求结束的回调
@@ -176,29 +95,12 @@ export function apiRequest(config) {
 		})
 }
 
-// 委托background执行请求
-function sendRequestToBackground(config) {
-	// chrome.runtime.sendMessage中只能传递JSON数据，不能传递file类型数据，因此直接从popup发起请求。
-	// The message to send. This message should be a JSON-ifiable object.
-	// 详情参阅：https://developer.chrome.com/extensions/runtime#method-sendMessage
-	if (chrome && chrome.runtime) {
-		chrome.runtime.sendMessage(
-			{
-				// 带上标识，让background script接收消息时知道此消息是用于请求API
-				type: "apiRequest",
-				config: config
-			},
-			result => {
-				// 接收background script的sendResponse方法返回的消数据result
-				config.done && config.done()
-				if (result.result === "succ") {
-					config.success && config.success(result)
-				} else {
-					config.fail && config.fail(result.msg)
-				}
-			}
+function objectToQueryString(obj) {
+	const keyValuePairs = []
+	for (const key in obj) {
+		keyValuePairs.push(
+			`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`
 		)
-	} else {
-		console.log("未找到chrome API")
 	}
+	return keyValuePairs.join("&")
 }

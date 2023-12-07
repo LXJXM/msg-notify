@@ -11,7 +11,13 @@ function Login() {
 				<p>未登录</p>
 				<p>登录后才能使用，鲁大师管理后台消息提醒插件</p>
 			</div>
-			<Button type="primary" block onClick={() => window.open(MAIN_URL)}>
+			<Button
+				type="primary"
+				block
+				onClick={() =>
+					window.open(`${MAIN_URL}/pcgameconsole/ConsoleUserMessages/index`)
+				}
+			>
 				立即登录
 			</Button>
 		</div>
