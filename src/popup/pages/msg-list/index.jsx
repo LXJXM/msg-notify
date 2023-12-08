@@ -3,10 +3,12 @@ import "./style.scss"
 import Logo from "@/popup/images/logo.png"
 import { Avatar, Collapse, List, Badge, Empty, Button } from "antd"
 import { useEffect, useState } from "react"
-import { apiReqs } from "@/api"
+import { apiReqs, MAIN_URL } from "@/api"
+import { CloseOutlined } from "@ant-design/icons"
 
 function MsgList(props) {
 	const [list, setList] = useState([])
+
 	const [unreadNum, setUnreadNum] = useState(list.length)
 	useEffect(() => {
 		console.log(333333, props.username, props.cookieString)
@@ -41,10 +43,22 @@ function MsgList(props) {
 		setUnreadNum(unreadNum - 1)
 	}
 
+	const handleItemClose = deleteId => {
+		setList(list.filter(item => item.id !== deleteId))
+	}
+
 	return (
 		<div className="P-list">
 			<div className="P-list__user">
-				<Avatar size="large" src={Logo} />
+				<Avatar
+					src={Logo}
+					size="large"
+					title="打开消息中心页面"
+					className="P-list__avatar"
+					onClick={() =>
+						window.open(`${MAIN_URL}/pcgameconsole/ConsoleUserMessages/index`)
+					}
+				/>
 				<div className="P-list__username">{props.username}</div>
 				<div className="P-list__tips">
 					当前页面有 <div className="P-list__num">{unreadNum}</div> 条未读消息
@@ -52,13 +66,19 @@ function MsgList(props) {
 			</div>
 			<div className="P-list__container">
 				{list.length !== 0 ? (
-					<List
-						grid={{ column: 1 }}
-						dataSource={list}
-						renderItem={item => (
-							<MsgListItem {...item} onClick={handleMsgClick} />
-						)}
-					/>
+					<List grid={{ column: 1 }}>
+						{list.map(item => {
+							return (
+								<List.Item key={item.id}>
+									<MsgListItem
+										{...item}
+										onClick={handleMsgClick}
+										onClose={() => handleItemClose(item.id)}
+									/>
+								</List.Item>
+							)
+						})}
+					</List>
 				) : (
 					<Empty className="P-list__empty" />
 				)}
@@ -69,6 +89,7 @@ function MsgList(props) {
 
 function MsgListItem(props) {
 	const [checkState, setCheckState] = useState(false)
+	const [spinState, setSpinState] = useState(false)
 
 	const handleClick = () => {
 		if (checkState) {
@@ -93,6 +114,23 @@ function MsgListItem(props) {
 
 	return (
 		<List.Item onClick={handleClick}>
+			<Button
+				className="P-list__item-close"
+				shape="circle"
+				type="text"
+				size="small"
+				onMouseEnter={() => {
+					setSpinState(true)
+				}}
+				onMouseLeave={() => {
+					setSpinState(false)
+				}}
+				icon={<CloseOutlined spin={spinState} />}
+				onClick={() => {
+					console.log("删除当前消息")
+					props.onClose()
+				}}
+			/>
 			<Badge dot={!checkState}>
 				<Collapse
 					className="P-list__item"
