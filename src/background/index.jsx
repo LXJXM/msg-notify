@@ -25,6 +25,7 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
 			console.log("background res:", res)
 			if (res && res.length > 0) {
 				cookieString = ""
+				userInfo = null
 				res.forEach(item => {
 					if (item.name === "LUP") {
 						userInfo = decodeURIComponent(item.value)
@@ -38,6 +39,8 @@ chrome.runtime.onMessage.addListener((message, sender, response) => {
 			console.log("发出消息:", userInfo, cookieString)
 			response({ userInfo, cookieString })
 		})
+
+		return true
 	}
 
 	// 用户已查看则可以继续轮询
@@ -83,9 +86,8 @@ chrome.alarms.onAlarm.addListener(alarm => {
 						console.log("有新消息")
 						const text =
 							parseInt(res.data.total) > 99 ? "99+" : String(res.data.total)
-						if (res.data.total)
-							// 新消息状态
-							chrome.action.setBadgeText({ text: text })
+						// 新消息状态
+						chrome.action.setBadgeText({ text: text })
 						// 暂停轮询
 						suspend = true
 
