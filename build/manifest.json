@@ -1,7 +1,7 @@
 {
 	"name": "LDS Admin Message Center",
 	"version": "1.0",
-	"description": "鲁大师admin消息通知中心",
+	"description": "鲁大师admin消息通知中心(正式版)",
 	"manifest_version": 3,
 	"background": {
 		"service_worker": "background.js"

@@ -59,7 +59,7 @@ function initMsgNotify() {
 	chrome.action.setBadgeBackgroundColor({ color: "#FF0000" })
 	chrome.alarms.create(msgQueryAlarm, {
 		delayInMinutes: 0,
-		periodInMinutes: 1
+		periodInMinutes: 5
 	})
 	console.log("发出警报")
 }
@@ -113,7 +113,7 @@ chrome.alarms.onAlarm.addListener(alarm => {
 chrome.notifications.onClicked.addListener(notificationId => {
 	if (notificationId === msgNotificationId) {
 		chrome.tabs.create({
-			url: "https://admin-aliyun-test.ludashi.com/pcgameconsole/ConsoleUserMessages/index"
+			url: `${MAIN_URL}/pcgameconsole/ConsoleUserMessages/index`
 		})
 	}
 })

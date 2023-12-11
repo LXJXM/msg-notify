@@ -1,8 +1,8 @@
 // 目标地址
-export const MAIN_URL = "http://admin-aliyun-test.ludashi.com"
+export const MAIN_URL = "http://admin.ludashi.com"
 // 请求服务器地址（开发环境模拟请求地址）
 let API_DOMAIN =
-	"http://admin-aliyun-test.ludashi.com/pcgameconsole/ConsoleUserMessages"
+	"http://admin.ludashi.com/pcgameconsole/ConsoleUserMessages"
 // 请求服务器地址（正式build环境真实请求地址）
 // if (import.meta.env.MODE === 'production') {
 //     API_DOMAIN = 'http://localhost/api/'
